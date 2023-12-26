@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output = "../src/lib/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("BOOK_CATALOG_PG_URL")
+}
+
+// schema.prisma
+
+// Define the Author model
+model Author {
+  id        String    @id @default(uuid())
+  name      String
+  biography String?
+  birthDate DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Book      Book[]
+}
+
+// Define the Book model
+model Book {
+  id              String    @id @default(uuid())
+  title           String
+  description     String?
+  isbn            String?   @unique
+  publicationYear Int
+  publicationDate DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  // Add more fields as needed
+
+  // Define a many-to-many relationship with Genre
+  // genres Genre[] @relation(references: [id])
+
+  // Define a many-to-one relationship with Author
+  authorId String
+  author   Author @relation(fields: [authorId], references: [id])
+
+  // Define other relationships or fields as needed
+  BookGenre BookGenre[]
+}
+
+// Define the Genre model
+// Define the Genre model
+model Genre {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Define a many-to-many relationship with Book
+  BookGenre BookGenre[]
+}
+
+model BookGenre {
+  bookId  String
+  genreId String
+
+  // Define foreign key relationships
+  book  Book  @relation(fields: [bookId], references: [id])
+  genre Genre @relation(fields: [genreId], references: [id])
+
+  // Define the primary key
+  @@id([bookId, genreId])
+}

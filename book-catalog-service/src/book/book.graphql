@@ -1,0 +1,77 @@
+type Author {
+  id: ID!
+  name: String!
+  biography: String
+  birthDate: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  books: [Book!]!
+}
+
+type Book {
+  id: ID!
+  title: String!
+  description: String
+  isbn: String
+  publicationYear: Int
+  publicationDate: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  author: Author!
+  genres: [Genre!]!
+}
+
+type Genre {
+  id: ID!
+  name: String!
+  description: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  books: [Book!]!
+}
+
+type BookGenre {
+  bookId: ID!
+  genreId: ID!
+  book: Book!
+  genre: Genre!
+}
+
+scalar DateTime
+
+# Queries and Mutations can be added based on your application's needs
+# For example:
+type Query {
+  book(id: ID!): Book
+  books: [Book]!
+}
+
+type Mutation {
+  createBook(input: CreateBookInput!): Book!
+  updateBook(id: ID!, input: UpdateBookInput!): Book!
+  deleteBook(id: ID!): Book!
+}
+
+input CreateBookInput {
+  title: String!
+  description: String
+  isbn: String
+  publicationYear: Int
+  publicationDate: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  author: Author!
+  genres: [Genre!]!
+}
+
+input UpdateBookInput {
+  title: String!
+  description: String
+  isbn: String
+  publicationYear: Int
+  publicationDate: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  author: Author!
+  genres: [Genre!]!
+}

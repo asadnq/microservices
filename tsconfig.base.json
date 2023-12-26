@@ -14,7 +14,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@microservices/book-catalog-db": ["book-catalog-db/src/index.ts"],
+      "@microservices/user-db": ["user-db/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

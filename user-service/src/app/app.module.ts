@@ -6,7 +6,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { UserDBModule } from '@microservices/user-db';
 import { ConfigModule } from '@nestjs/config';
-import { UserModule } from '../user/user.module';
+import { UserResolver } from '../user/user.resolver';
+import { UserService } from '../user/user.service';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { UserModule } from '../user/user.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: false,
-      typePaths: ['./**/*.graphql'],
+      typePaths: ['user-service/**/*.graphql'],
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       definitions: {
         path: join(process.cwd(), 'user-service/generated/graphql.ts'),
@@ -26,7 +27,8 @@ import { UserModule } from '../user/user.module';
     }),
     // Database
     UserDBModule,
-    UserModule,
+    // UserModule,
   ],
+  providers: [UserResolver, UserService],
 })
 export class AppModule {}

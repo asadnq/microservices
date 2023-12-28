@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "gen:typings": "ts-node generate-typings --no-cache"
+    "gen:typings": "ts-node generate-typings"
   },
   "private": true,
   "dependencies": {

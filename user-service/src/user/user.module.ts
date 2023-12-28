@@ -7,5 +7,6 @@ import { UserDBModule } from '@microservices/user-db';
 @Module({
   imports: [UserDBModule],
   providers: [UserResolver, UserService],
+  exports: [UserResolver],
 })
 export class UserModule {}

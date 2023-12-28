@@ -6,10 +6,10 @@ const subgraphs = [
     source: 'user-service/**/*.graphql',
     output: join(process.cwd(), 'user-service/generated/graphql.ts'),
   },
-  // {
-  //   source: 'book-catalog-service/**/*.graphql',
-  //   output: join(process.cwd(), 'book-catalog-service/generated/graphql.ts'),
-  // },
+  {
+    source: 'book-catalog-service/**/*.graphql',
+    output: join(process.cwd(), 'book-catalog-service/generated/graphql.ts'),
+  },
 ];
 
 const definitionsFactory = new GraphQLFederationDefinitionsFactory();

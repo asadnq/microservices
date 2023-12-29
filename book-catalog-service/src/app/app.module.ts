@@ -4,9 +4,9 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
-import { BookResolver } from '../book/book.resolver';
 import { BookCatalogDBModule } from '@microservices/book-catalog-db';
 import { ConfigModule } from '@nestjs/config';
+import { BookModule } from '../book/book.module';
 
 @Module({
   imports: [
@@ -26,7 +26,8 @@ import { ConfigModule } from '@nestjs/config';
     }),
     // Database
     BookCatalogDBModule,
+    BookModule,
   ],
-  providers: [BookResolver],
+  providers: [],
 })
 export class AppModule {}

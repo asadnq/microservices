@@ -18,7 +18,7 @@
     "up:dev": {
       "executor": "nx:run-commands",
       "options": {
-        "cwd": "user-db",
+        "cwd": "book-catalog-db",
         "commands": [
           "docker compose --env-file .env -f docker-compose.dev.yml up -d"
         ]
@@ -27,7 +27,7 @@
     "down:dev": {
       "executor": "nx:run-commands",
       "options": {
-        "cwd": "user-db",
+        "cwd": "book-catalog-db",
         "commands": [
           "docker compose --env-file .env -f docker-compose.dev.yml down"
         ]

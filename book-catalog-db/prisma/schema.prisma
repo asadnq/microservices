@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "../src/lib/generated"
+  output   = "../src/lib/generated"
 }
 
 datasource db {
@@ -11,62 +11,46 @@ datasource db {
   url      = env("BOOK_CATALOG_PG_URL")
 }
 
-// schema.prisma
-
-// Define the Author model
 model Author {
   id        String    @id @default(uuid())
   name      String
   biography String?
-  birthDate DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Book      Book[]
+  birthDate DateTime? @map("birth_date")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  books     Book[]    @relation("AuthorBooks")
 }
 
-// Define the Book model
 model Book {
-  id              String    @id @default(uuid())
+  id              String      @id @default(uuid()) @map("id")
   title           String
   description     String?
-  isbn            String?   @unique
-  publicationYear Int
-  publicationDate DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  // Add more fields as needed
-
-  // Define a many-to-many relationship with Genre
-  // genres Genre[] @relation(references: [id])
-
-  // Define a many-to-one relationship with Author
-  authorId String
-  author   Author @relation(fields: [authorId], references: [id])
-
-  // Define other relationships or fields as needed
-  BookGenre BookGenre[]
+  isbn            String?
+  publicationYear Int         @map("publication_year")
+  publicationDate DateTime?  @map("publication_date")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+  authorId        String      @map("author_id")
+  author          Author      @relation("AuthorBooks", fields: [authorId], references: [id])
+  bookGenre       BookGenre[] @relation("BookGenres")
 }
 
-// Define the Genre model
-// Define the Genre model
 model Genre {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid()) @map("id")
   name        String
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Define a many-to-many relationship with Book
-  BookGenre BookGenre[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  bookGenre   BookGenre[] @relation("BookGenres")
 }
 
 model BookGenre {
-  bookId  String
-  genreId String
+  bookId  String @map("book_id")
+  genreId String @map("genre_id")
 
   // Define foreign key relationships
-  book  Book  @relation(fields: [bookId], references: [id])
-  genre Genre @relation(fields: [genreId], references: [id])
+  book  Book  @relation("BookGenres", fields: [bookId], references: [id])
+  genre Genre @relation("BookGenres", fields: [genreId], references: [id])
 
   // Define the primary key
   @@id([bookId, genreId])

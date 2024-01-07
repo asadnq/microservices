@@ -2,20 +2,24 @@ import { join } from 'path';
 import { Module } from '@nestjs/common';
 
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { UserDBModule } from '@microservices/user-db';
 import { ConfigModule } from '@nestjs/config';
 import { UserResolver } from '../user/user.resolver';
-import { UserService } from '../user/user.service';
+import { UserModule } from '../user/user.module';
+import { ShelfModule } from '../shelf/shelf.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       expandVariables: true,
     }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
+    GraphQLModule.forRoot<ApolloFederationDriverConfig>({
+      driver: ApolloFederationDriver,
       playground: false,
       typePaths: ['user-service/**/*.graphql'],
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
@@ -27,8 +31,10 @@ import { UserService } from '../user/user.service';
     }),
     // Database
     UserDBModule,
-    // UserModule,
+    // Entities
+    UserModule,
+    ShelfModule,
   ],
-  providers: [UserResolver, UserService],
+  providers: [UserResolver],
 })
 export class AppModule {}

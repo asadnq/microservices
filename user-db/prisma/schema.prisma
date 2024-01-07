@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "../src/lib/generated"
+  output   = "../src/lib/generated"
 }
 
 datasource db {
@@ -12,8 +12,29 @@ datasource db {
 }
 
 model User {
-  id        String   @id() @default(uuid())
+  id        String    @id() @default(uuid())
   email     String
   username  String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  shelves   Shelf[]
+}
+
+model Shelf {
+  id        String      @id() @default(uuid())
+  name      String?
+  userId    String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime?
+  ShelfBook ShelfBook[]
+  user      User        @relation(fields: [userId], references: [id])
+}
+
+model ShelfBook {
+  id        String    @id() @default(uuid())
+  shelfId   String
+  shelf     Shelf     @relation(fields: [shelfId], references: [id])
+  bookId    String    @db.Uuid
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
 }

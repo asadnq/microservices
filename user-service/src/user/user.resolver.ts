@@ -1,16 +1,27 @@
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  ID,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 
 import {
   CreateUserInput,
+  Shelf,
   UpdateUserInput,
-  IMutation,
-  IQuery,
   User,
 } from '../../generated/graphql';
 import { UserService } from './user.service';
+import { ShelfService } from '../shelf/shelf.service';
 @Resolver('User')
-export class UserResolver implements IQuery, IMutation {
-  constructor(private readonly userService: UserService) {}
+export class UserResolver {
+  constructor(
+    private readonly userService: UserService,
+    private readonly shelfService: ShelfService
+  ) {}
 
   @Query(() => [User])
   async users(): Promise<User[]> {
@@ -20,6 +31,11 @@ export class UserResolver implements IQuery, IMutation {
   @Query(() => User)
   async user(@Args('id', { type: () => ID }) id: string): Promise<User> {
     return this.userService.findById(id);
+  }
+
+  @ResolveField(() => [Shelf])
+  async shelves(@Parent() user: User) {
+    return this.shelfService.forUser(user);
   }
 
   @Mutation(() => User)

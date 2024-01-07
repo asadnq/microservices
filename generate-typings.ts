@@ -16,6 +16,7 @@ const definitionsFactory = new GraphQLFederationDefinitionsFactory();
 
 subgraphs.forEach(({ source, output }) => {
   definitionsFactory.generate({
+    // skipResolverArgs: true,
     typePaths: [source],
     path: output,
     outputAs: 'class',

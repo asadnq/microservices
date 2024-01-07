@@ -103,3 +103,9 @@ input UpdateGenreInput {
   name: String
   description: String
 }
+
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.3"
+    import: ["@key", "@shareable"]
+  )

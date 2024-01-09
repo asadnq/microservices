@@ -19,10 +19,10 @@ import { BookModule } from '../book/book.module';
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       playground: false,
-      typePaths: ['./**/*.graphql'],
+      typePaths: ['book-catalog-service/**/*.graphql'],
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       definitions: {
-        path: join(process.cwd(), 'user-service/generated/graphql.ts'),
+        path: join(process.cwd(), 'book-catalog-service/generated/graphql.ts'),
         outputAs: 'class',
         skipResolverArgs: false,
       },

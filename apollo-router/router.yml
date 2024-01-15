@@ -1,0 +1,6 @@
+homepage:
+  enabled: false
+supergraph:
+  introspection: true
+sandbox:
+  enabled: true

@@ -1,0 +1,236 @@
+schema
+  @link(url: "https://specs.apollo.dev/link/v1.0")
+  @link(url: "https://specs.apollo.dev/join/v0.3", for: EXECUTION)
+{
+  query: Query
+  mutation: Mutation
+}
+
+directive @join__enumValue(graph: join__Graph!) repeatable on ENUM_VALUE
+
+directive @join__field(graph: join__Graph, requires: join__FieldSet, provides: join__FieldSet, type: String, external: Boolean, override: String, usedOverridden: Boolean) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @join__graph(name: String!, url: String!) on ENUM_VALUE
+
+directive @join__implements(graph: join__Graph!, interface: String!) repeatable on OBJECT | INTERFACE
+
+directive @join__type(graph: join__Graph!, key: join__FieldSet, extension: Boolean! = false, resolvable: Boolean! = true, isInterfaceObject: Boolean! = false) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
+
+directive @join__unionMember(graph: join__Graph!, member: String!) repeatable on UNION
+
+directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
+
+type Author
+  @join__type(graph: BOOK_CATALOG)
+{
+  id: ID!
+  name: String!
+  biography: String
+  birthDate: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  books: [Book!]!
+}
+
+type Book
+  @join__type(graph: BOOK_CATALOG, key: "id")
+  @join__type(graph: USER, key: "id")
+{
+  id: ID!
+  title: String! @join__field(graph: BOOK_CATALOG)
+  description: String @join__field(graph: BOOK_CATALOG)
+  isbn: String @join__field(graph: BOOK_CATALOG)
+  publicationYear: Int! @join__field(graph: BOOK_CATALOG)
+  publicationDate: DateTime @join__field(graph: BOOK_CATALOG)
+  createdAt: DateTime! @join__field(graph: BOOK_CATALOG)
+  updatedAt: DateTime! @join__field(graph: BOOK_CATALOG)
+  author: Author! @join__field(graph: BOOK_CATALOG)
+  genres: [Genre!]! @join__field(graph: BOOK_CATALOG)
+}
+
+type BookGenre
+  @join__type(graph: BOOK_CATALOG)
+{
+  bookId: ID!
+  genreId: ID!
+  book: Book!
+  genre: Genre!
+}
+
+input CreateAuthorInput
+  @join__type(graph: BOOK_CATALOG)
+{
+  name: String!
+  biography: String
+  birthDate: DateTime
+  bookIds: [String]
+}
+
+input CreateBookInput
+  @join__type(graph: BOOK_CATALOG)
+{
+  title: String!
+  description: String
+  isbn: String!
+  publicationYear: Int!
+  publicationDate: DateTime
+  authorId: String!
+  genreIds: [String!]!
+}
+
+input CreateGenreInput
+  @join__type(graph: BOOK_CATALOG)
+{
+  name: String!
+  description: String
+}
+
+input CreateShelfInput
+  @join__type(graph: USER)
+{
+  name: String!
+  userId: ID!
+  books: [String!]!
+}
+
+input CreateUserInput
+  @join__type(graph: USER)
+{
+  email: String!
+  username: String!
+}
+
+scalar DateTime
+  @join__type(graph: BOOK_CATALOG)
+  @join__type(graph: USER)
+
+type Genre
+  @join__type(graph: BOOK_CATALOG)
+{
+  id: ID!
+  name: String!
+  description: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  books: [Book!]!
+}
+
+scalar join__FieldSet
+
+enum join__Graph {
+  BOOK_CATALOG @join__graph(name: "book-catalog", url: "http://localhost:7721/graphql")
+  USER @join__graph(name: "user", url: "http://localhost:3001/graphql")
+}
+
+scalar link__Import
+
+enum link__Purpose {
+  """
+  `SECURITY` features provide metadata necessary to securely resolve fields.
+  """
+  SECURITY
+
+  """
+  `EXECUTION` features provide metadata necessary for operation execution.
+  """
+  EXECUTION
+}
+
+type Mutation
+  @join__type(graph: BOOK_CATALOG)
+  @join__type(graph: USER)
+{
+  createBook(input: CreateBookInput!): Book! @join__field(graph: BOOK_CATALOG)
+  updateBook(id: ID!, input: UpdateBookInput!): Book! @join__field(graph: BOOK_CATALOG)
+  deleteBook(id: ID!): Book! @join__field(graph: BOOK_CATALOG)
+  createGenre(input: CreateGenreInput!): Genre! @join__field(graph: BOOK_CATALOG)
+  updateGenre(id: ID!, input: UpdateGenreInput!): Genre! @join__field(graph: BOOK_CATALOG)
+  deleteGenre(id: ID!): Genre! @join__field(graph: BOOK_CATALOG)
+  createAuthor(input: CreateAuthorInput!): Author! @join__field(graph: BOOK_CATALOG)
+  updateAuthor(id: ID!, input: UpdateAuthorInput!): Author! @join__field(graph: BOOK_CATALOG)
+  deleteAuthor(id: ID!): Author! @join__field(graph: BOOK_CATALOG)
+  createShelf(input: CreateShelfInput): Shelf! @join__field(graph: USER)
+  updateShelf(input: UpdateShelfInput): Shelf! @join__field(graph: USER)
+  deleteShelf(id: ID!): Shelf @join__field(graph: USER)
+  createUser(input: CreateUserInput!): User! @join__field(graph: USER)
+  updateUser(id: ID!, input: UpdateUserInput!): User! @join__field(graph: USER)
+  deleteUser(id: ID!): User! @join__field(graph: USER)
+}
+
+type Query
+  @join__type(graph: BOOK_CATALOG)
+  @join__type(graph: USER)
+{
+  book(id: ID!): Book @join__field(graph: BOOK_CATALOG)
+  books: [Book!]! @join__field(graph: BOOK_CATALOG)
+  author(id: ID!): Author @join__field(graph: BOOK_CATALOG)
+  authors: [Author!]! @join__field(graph: BOOK_CATALOG)
+  genre(id: ID!): Genre @join__field(graph: BOOK_CATALOG)
+  genres: [Genre!]! @join__field(graph: BOOK_CATALOG)
+  users: [User!] @join__field(graph: USER)
+  user(id: ID!): User! @join__field(graph: USER)
+}
+
+type Shelf
+  @join__type(graph: USER, key: "id")
+{
+  id: ID!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  userId: String!
+  user: User!
+  books: [Book!]
+}
+
+input UpdateAuthorInput
+  @join__type(graph: BOOK_CATALOG)
+{
+  name: String
+  biography: String
+  birthDate: DateTime
+  bookIds: [String]
+}
+
+input UpdateBookInput
+  @join__type(graph: BOOK_CATALOG)
+{
+  title: String
+  description: String
+  isbn: String
+  publicationYear: Int
+  publicationDate: DateTime
+  authorId: String
+  genreIds: [String!]
+}
+
+input UpdateGenreInput
+  @join__type(graph: BOOK_CATALOG)
+{
+  name: String
+  description: String
+}
+
+input UpdateShelfInput
+  @join__type(graph: USER)
+{
+  shelfId: ID!
+  books: [String!]!
+}
+
+input UpdateUserInput
+  @join__type(graph: USER)
+{
+  email: String
+  username: String
+}
+
+type User
+  @join__type(graph: USER)
+{
+  shelves: [Shelf!]
+  id: ID!
+  email: String!
+  username: String!
+  createdAt: DateTime!
+}

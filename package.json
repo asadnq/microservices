@@ -3,7 +3,11 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "gen:typings": "ts-node generate-typings"
+    "gen:typings": "ts-node generate-typings",
+    "dev:db:up": "pnpm nx run-many --projects=user-db,book-catalog-db --target=up:dev",
+    "dev:subgraphs:up": "pnpm nx run-many --projects=*-service --target=serve",
+    "dev:compose:up": "docker ",
+    "dev:supergraph:compose": "npx rover supergraph compose --config apollo-router/supergraph-config.yml > apollo-router/supergraph.gql"
   },
   "private": true,
   "dependencies": {
@@ -26,6 +30,7 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@apollo/rover": "^0.22.0",
     "@nestjs/schematics": "^10.0.1",
     "@nestjs/testing": "^10.0.2",
     "@nx/eslint": "17.2.0",

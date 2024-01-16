@@ -12,6 +12,30 @@ type Shelf @key(fields: "id") {
   books: [Book!]
 }
 
+extend type Mutation {
+  createShelf(input: CreateShelfInput): Shelf!
+  updateShelf(input: UpdateShelfInput): Shelf!
+  addBooksToShelf(input: UpdateShelfBooksInput): Shelf!
+  removeBooksFromShelf(input: UpdateShelfBooksInput): Shelf!
+  deleteShelf(id: ID!): Shelf
+}
+
+input CreateShelfInput {
+  name: String!
+  userId: ID!
+  books: [String!]!
+}
+
+input UpdateShelfInput {
+  shelfId: ID!
+  name: String!
+}
+
+input UpdateShelfBooksInput {
+  shelfId: ID!
+  books: [String!]!
+}
+
 type Book @key(fields: "id") {
   id: ID!
 }

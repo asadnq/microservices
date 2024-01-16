@@ -151,6 +151,8 @@ type Mutation
   deleteAuthor(id: ID!): Author! @join__field(graph: BOOK_CATALOG)
   createShelf(input: CreateShelfInput): Shelf! @join__field(graph: USER)
   updateShelf(input: UpdateShelfInput): Shelf! @join__field(graph: USER)
+  addBooksToShelf(input: UpdateShelfBooksInput): Shelf! @join__field(graph: USER)
+  removeBooksFromShelf(input: UpdateShelfBooksInput): Shelf! @join__field(graph: USER)
   deleteShelf(id: ID!): Shelf @join__field(graph: USER)
   createUser(input: CreateUserInput!): User! @join__field(graph: USER)
   updateUser(id: ID!, input: UpdateUserInput!): User! @join__field(graph: USER)
@@ -211,11 +213,18 @@ input UpdateGenreInput
   description: String
 }
 
-input UpdateShelfInput
+input UpdateShelfBooksInput
   @join__type(graph: USER)
 {
   shelfId: ID!
   books: [String!]!
+}
+
+input UpdateShelfInput
+  @join__type(graph: USER)
+{
+  shelfId: ID!
+  name: String!
 }
 
 input UpdateUserInput

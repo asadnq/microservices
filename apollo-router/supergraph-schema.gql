@@ -33,18 +33,19 @@ type Author
 }
 
 type Book
-  @join__type(graph: BOOK_CATALOG)
+  @join__type(graph: BOOK_CATALOG, key: "id")
+  @join__type(graph: USER, key: "id")
 {
   id: ID!
-  title: String!
-  description: String
-  isbn: String
-  publicationYear: Int!
-  publicationDate: DateTime
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  author: Author!
-  genres: [Genre!]!
+  title: String! @join__field(graph: BOOK_CATALOG)
+  description: String @join__field(graph: BOOK_CATALOG)
+  isbn: String @join__field(graph: BOOK_CATALOG)
+  publicationYear: Int! @join__field(graph: BOOK_CATALOG)
+  publicationDate: DateTime @join__field(graph: BOOK_CATALOG)
+  createdAt: DateTime! @join__field(graph: BOOK_CATALOG)
+  updatedAt: DateTime! @join__field(graph: BOOK_CATALOG)
+  author: Author! @join__field(graph: BOOK_CATALOG)
+  genres: [Genre!]! @join__field(graph: BOOK_CATALOG)
 }
 
 type BookGenre
@@ -82,6 +83,14 @@ input CreateGenreInput
 {
   name: String!
   description: String
+}
+
+input CreateShelfInput
+  @join__type(graph: USER)
+{
+  name: String!
+  userId: ID!
+  books: [String!]!
 }
 
 input CreateUserInput
@@ -140,6 +149,11 @@ type Mutation
   createAuthor(input: CreateAuthorInput!): Author! @join__field(graph: BOOK_CATALOG)
   updateAuthor(id: ID!, input: UpdateAuthorInput!): Author! @join__field(graph: BOOK_CATALOG)
   deleteAuthor(id: ID!): Author! @join__field(graph: BOOK_CATALOG)
+  createShelf(input: CreateShelfInput): Shelf! @join__field(graph: USER)
+  updateShelf(input: UpdateShelfInput): Shelf! @join__field(graph: USER)
+  addBooksToShelf(input: UpdateShelfBooksInput): Shelf! @join__field(graph: USER)
+  removeBooksFromShelf(input: UpdateShelfBooksInput): Shelf! @join__field(graph: USER)
+  deleteShelf(id: ID!): Shelf @join__field(graph: USER)
   createUser(input: CreateUserInput!): User! @join__field(graph: USER)
   updateUser(id: ID!, input: UpdateUserInput!): User! @join__field(graph: USER)
   deleteUser(id: ID!): User! @join__field(graph: USER)
@@ -168,6 +182,7 @@ type Shelf
   updatedAt: DateTime
   userId: String!
   user: User!
+  books: [Book!]
 }
 
 input UpdateAuthorInput
@@ -196,6 +211,20 @@ input UpdateGenreInput
 {
   name: String
   description: String
+}
+
+input UpdateShelfBooksInput
+  @join__type(graph: USER)
+{
+  shelfId: ID!
+  books: [String!]!
+}
+
+input UpdateShelfInput
+  @join__type(graph: USER)
+{
+  shelfId: ID!
+  name: String!
 }
 
 input UpdateUserInput

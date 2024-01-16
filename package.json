@@ -6,8 +6,9 @@
     "gen:typings": "ts-node generate-typings",
     "dev:db:up": "pnpm nx run-many --projects=user-db,book-catalog-db --target=up:dev",
     "dev:subgraphs:up": "pnpm nx run-many --projects=*-service --target=serve",
-    "dev:compose:up": "docker ",
-    "dev:supergraph:compose": "npx rover supergraph compose --config apollo-router/supergraph-config.yml > apollo-router/supergraph.gql"
+    "dev:compose:up": "docker compose -f docker-compose.dev.yml up",
+    "dev:compose:up:build": "docker compose -f docker-compose.dev.yml up --build",
+    "dev:supergraph:compose": "npx rover supergraph compose --config apollo-router/supergraph-config.yml > apollo-router/supergraph-schema.gql"
   },
   "private": true,
   "dependencies": {

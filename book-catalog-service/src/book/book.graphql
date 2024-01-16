@@ -10,7 +10,7 @@ type Author {
   books: [Book!]!
 }
 
-type Book {
+type Book @key(fields: "id") {
   id: ID!
   title: String!
   description: String

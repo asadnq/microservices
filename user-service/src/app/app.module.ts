@@ -35,6 +35,6 @@ import { ShelfModule } from '../shelf/shelf.module';
     UserModule,
     ShelfModule,
   ],
-  providers: [UserResolver],
+  providers: [UserResolver, ShelfModule],
 })
 export class AppModule {}

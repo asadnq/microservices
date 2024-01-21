@@ -1,0 +1,47 @@
+extend type User {
+  shelves: [Shelf!]
+}
+
+type Shelf @key(fields: "id") {
+  id: ID!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  userId: String!
+  user: User!
+  books: [Book!]
+}
+
+extend type Mutation {
+  createShelf(input: CreateShelfInput): Shelf!
+  updateShelf(input: UpdateShelfInput): Shelf!
+  addBooksToShelf(input: UpdateShelfBooksInput): Shelf!
+  removeBooksFromShelf(input: UpdateShelfBooksInput): Shelf!
+  deleteShelf(id: ID!): Shelf
+}
+
+input CreateShelfInput {
+  name: String!
+  userId: ID!
+  books: [String!]!
+}
+
+input UpdateShelfInput {
+  shelfId: ID!
+  name: String!
+}
+
+input UpdateShelfBooksInput {
+  shelfId: ID!
+  books: [String!]!
+}
+
+type Book @key(fields: "id") {
+  id: ID!
+}
+
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.3"
+    import: ["@key", "@shareable"]
+  )

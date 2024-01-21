@@ -1,0 +1,111 @@
+scalar DateTime
+
+type Author {
+  id: ID!
+  name: String!
+  biography: String
+  birthDate: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  books: [Book!]!
+}
+
+type Book @key(fields: "id") {
+  id: ID!
+  title: String!
+  description: String
+  isbn: String
+  publicationYear: Int!
+  publicationDate: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  author: Author!
+  genres: [Genre!]!
+}
+
+type Genre {
+  id: ID!
+  name: String!
+  description: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  books: [Book!]!
+}
+
+type BookGenre {
+  bookId: ID!
+  genreId: ID!
+  book: Book!
+  genre: Genre!
+}
+
+type Query {
+  book(id: ID!): Book
+  books: [Book!]!
+  author(id: ID!): Author
+  authors: [Author!]!
+  genre(id: ID!): Genre
+  genres: [Genre!]!
+}
+
+type Mutation {
+  createBook(input: CreateBookInput!): Book!
+  updateBook(id: ID!, input: UpdateBookInput!): Book!
+  deleteBook(id: ID!): Book!
+  createGenre(input: CreateGenreInput!): Genre!
+  updateGenre(id: ID!, input: UpdateGenreInput!): Genre!
+  deleteGenre(id: ID!): Genre!
+  createAuthor(input: CreateAuthorInput!): Author!
+  updateAuthor(id: ID!, input: UpdateAuthorInput!): Author!
+  deleteAuthor(id: ID!): Author!
+}
+
+input CreateBookInput {
+  title: String!
+  description: String
+  isbn: String!
+  publicationYear: Int!
+  publicationDate: DateTime
+  authorId: String!
+  genreIds: [String!]!
+}
+
+input UpdateBookInput {
+  title: String
+  description: String
+  isbn: String
+  publicationYear: Int
+  publicationDate: DateTime
+  authorId: String
+  genreIds: [String!]
+}
+
+input CreateAuthorInput {
+  name: String!
+  biography: String
+  birthDate: DateTime
+  bookIds: [String]
+}
+
+input UpdateAuthorInput {
+  name: String
+  biography: String
+  birthDate: DateTime
+  bookIds: [String]
+}
+
+input CreateGenreInput {
+  name: String!
+  description: String
+}
+
+input UpdateGenreInput {
+  name: String
+  description: String
+}
+
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.3"
+    import: ["@key", "@shareable"]
+  )

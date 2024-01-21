@@ -1,0 +1,13 @@
+version: '3.3'
+
+services:
+  apollo-router:
+    build:
+      context: ./apollo-router
+      dockerfile: Dockerfile
+    container_name: mb-apollo-router
+    volumes:
+      - ./apollo-router/supergraph-schema.gql:/supergraph-schema.gql:ro
+    network_mode: host
+    ports:
+      - 4000:4000

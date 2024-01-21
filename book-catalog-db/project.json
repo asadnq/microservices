@@ -1,0 +1,38 @@
+{
+  "name": "book-catalog-db",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "book-catalog-db/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "book-catalog-db/jest.config.ts"
+      }
+    },
+    "up:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "book-catalog-db",
+        "commands": [
+          "docker compose --env-file .env -f docker-compose.dev.yml up -d"
+        ]
+      }
+    },
+    "down:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "book-catalog-db",
+        "commands": [
+          "docker compose --env-file .env -f docker-compose.dev.yml down"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

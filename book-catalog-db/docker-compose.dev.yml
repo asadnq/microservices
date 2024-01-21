@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  book-catalog-db:
+    env_file: ./.env
+    container_name: ${BOOK_CATALOG_DB_CONTAINER_PREFIX}book-catalog-db
+    image: postgres:15
+    command: ['postgres', '-c', 'log_statement=all']
+    volumes:
+      - book-catalog-db:/var/lib/postgresql/data/pgdata
+    ports:
+      - '${BOOK_CATALOG_PG_PORT}:5432'
+    environment:
+      POSTGRES_PASSWORD: ${BOOK_CATALOG_PG_PASSWORD}
+      POSTGRES_USER: ${BOOK_CATALOG_PG_USER}
+      POSTGRES_DB: ${BOOK_CATALOG_PG_DB}
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+volumes:
+  book-catalog-db:
